@@ -21,8 +21,7 @@ def read_and_output_data() -> list[list[int | float]]:
         return
 
     #output
-    if (output_file_name_sv.get() == ""):
-	    output_file_name_sv.set(value="output")
+    if (output_file_name_sv.get() == ""): output_file_name_sv.set(value="output")
 
     input_data = read_csv(file_path_sv.get(), sep=',', parse_dates= False, header= None, names=['a','b','c','d', 'e', 'f'], skip_blank_lines=True, )
     input_data.dropna(how="all", inplace=True)

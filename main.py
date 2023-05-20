@@ -21,8 +21,7 @@ def read_and_output_data() -> list[list[int | float]]:
         return
 
     #output
-    if (output_file_name_sv.get() == ""):
-	    output_file_name_sv.set(value="output")
+    if (output_file_name_sv.get() == ""): output_file_name_sv.set(value="output")
 		
     output_f = open(get_output_file_path(), 'w', newline='', encoding='utf-8')
     writer = csv.writer(output_f)
