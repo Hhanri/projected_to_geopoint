@@ -7,7 +7,7 @@ from pandas import read_csv, Series
 window = tk.Tk()
 window.minsize(200, 100)
 file_path_sv = tk.StringVar()
-inEPSG_sv = tk.StringVar(value= "3857")
+inEPSG_sv = tk.StringVar(value= "32617")
 outEPSG_sv = tk.StringVar(value= "4326")
 output_file_path_sv = tk.StringVar()
 output_file_name_sv = tk.StringVar()
@@ -25,11 +25,10 @@ def read_and_output_data() -> list[list[int | float]]:
 
     input_data = read_csv(file_path_sv.get(), sep=',', parse_dates= False, header= None, names=['a','b','c','d', 'e', 'f'], skip_blank_lines=True, )
     input_data.dropna(how="all", inplace=True)
-    
     data_length = len(input_data.index)
     print("ROWS", data_length)
-    input_data[['b', 'a']] = input_data.apply(lambda x: Series(update_row(x.b, x.a, x.name, data_length)), axis=1)
-	
+    input_data[['b', 'a']] = input_data.apply(lambda x: Series(update_row(x.a, x.b, x.name, data_length)), axis=1) 
+
     input_data.to_csv(path_or_buf=get_output_file_path(), header=False, index=False)
 
     messagebox.showinfo(title="STATUS COMPLETE", message="Computation is done !")
@@ -54,7 +53,7 @@ def update_row(x: float, y: float, index, max):
     return projected_to_geographic(x, y)
 
 def projected_to_geographic(x: float, y: float) -> list[float, float]:
-    transformer = Transformer.from_crs(f"EPSG:{inEPSG_sv.get()}", f"EPSG:{outEPSG_sv.get()}")
+    transformer = Transformer.from_crs(int(inEPSG_sv.get()), int(outEPSG_sv.get()))
     x2, y2 = transformer.transform(x,y)
     return [x2, y2]
     

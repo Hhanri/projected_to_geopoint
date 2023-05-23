@@ -7,7 +7,7 @@ import csv
 window = tk.Tk()
 window.minsize(200, 100)
 file_path_sv = tk.StringVar()
-inEPSG_sv = tk.StringVar(value= "3857")
+inEPSG_sv = tk.StringVar(value= "32617")
 outEPSG_sv = tk.StringVar(value= "4326")
 output_file_path_sv = tk.StringVar()
 output_file_name_sv = tk.StringVar()
@@ -41,7 +41,7 @@ def read_and_output_data() -> list[list[int | float]]:
                 int(line_data[5]),
             ]
 
-            row_data[1], row_data[0] =  projected_to_geographic(row_data[1], row_data[0])
+            row_data[1], row_data[0] =  projected_to_geographic(row_data[0], row_data[1])
             writer.writerow(row_data)
 
     f.close()
@@ -65,7 +65,7 @@ def select_output_directory() -> None:
     return
 
 def projected_to_geographic(x: float, y: float) -> tuple[float, float]:
-    transformer = Transformer.from_crs(f"EPSG:{inEPSG_sv.get()}", f"EPSG:{outEPSG_sv.get()}")
+    transformer = Transformer.from_crs(int(inEPSG_sv.get()), int(outEPSG_sv.get()))
     return transformer.transform(x,y)
 
 
@@ -101,3 +101,5 @@ output_button = tk.Button(text="Output file", command=lambda: read_and_output_da
 output_button.pack()
 
 window.mainloop()
+
+print(projected_to_geographic(4853184.953068148, 15377344.984930504))
